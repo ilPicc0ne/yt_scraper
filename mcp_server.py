@@ -59,7 +59,7 @@ def scrape_video(video: str, languages: list[str] = scrape.DEFAULT_LANGS,
 def save_summary(path: str, summary_markdown: str) -> str:
     """Replace the `_(TODO)_` placeholder in an output file (as returned by
     scrape_video) with a detailed markdown summary in the video's language.
-    Use H3 headings; the file already has the '## Zusammenfassung' H2."""
+    Use H3 headings; the file already carries the summary H2 above the placeholder."""
     return str(_guard(scrape.save_summary, path, summary_markdown))
 
 

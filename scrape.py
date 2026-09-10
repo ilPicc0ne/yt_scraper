@@ -13,6 +13,17 @@ OUTPUT_DIR = ROOT / "output"
 PLACEHOLDER = "_(TODO)_"
 DEFAULT_LANGS = ["de", "en"]
 
+# Headings written into each output file. Swap in another language if you like --
+# only SUMMARY_HEADING is referenced elsewhere (mcp_server.py mentions it in a docstring).
+# German set: "Kanal", "Video", "Gescraped", "Sprachen (Priorität)",
+#             "Zusammenfassung", "Volltranskript"
+LABEL_CHANNEL = "Channel"
+LABEL_VIDEO = "Video"
+LABEL_SCRAPED = "Scraped"
+LABEL_LANGS = "Languages (priority)"
+SUMMARY_HEADING = "Summary"
+TRANSCRIPT_HEADING = "Full transcript"
+
 
 def video_id(s: str) -> str:
     m = re.search(r"(?:v=|youtu\.be/|shorts/)([\w-]{11})", s)
@@ -75,9 +86,9 @@ def scrape_video(video: str, languages: list[str] | None = None, overwrite: bool
     OUTPUT_DIR.mkdir(exist_ok=True)
     path.write_text(
         f"# {t['title']}\n\n"
-        f"- **Kanal:** {t['channel']}\n- **Video:** {t['url']}\n"
-        f"- **Gescraped:** {today}\n- **Sprachen (Priorität):** {', '.join(langs)}\n\n"
-        f"---\n\n## Zusammenfassung\n\n{PLACEHOLDER}\n\n---\n\n## Volltranskript\n\n"
+        f"- **{LABEL_CHANNEL}:** {t['channel']}\n- **{LABEL_VIDEO}:** {t['url']}\n"
+        f"- **{LABEL_SCRAPED}:** {today}\n- **{LABEL_LANGS}:** {', '.join(langs)}\n\n"
+        f"---\n\n## {SUMMARY_HEADING}\n\n{PLACEHOLDER}\n\n---\n\n## {TRANSCRIPT_HEADING}\n\n"
         + t["transcript"] + "\n"
     )
     return path

@@ -4,7 +4,7 @@ Scrape YouTube transcripts and summarize them.
 
 ## Rules
 - Every scraped video produces **one** file in `output/`, named `<YYYY-MM-DD>_<video title>.md`.
-- File layout: header + metadata, `## Zusammenfassung` (detailed, in the video's language), `## Volltranskript` (full transcript).
+- File layout: header + metadata, `## Summary` (detailed, in the video's language), `## Full transcript`. Heading strings are constants at the top of `scrape.py` (older files in `output/` still use the German headings).
 - No loose transcript or summary files in the project root.
 
 ## How

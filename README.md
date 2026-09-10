@@ -27,7 +27,7 @@ contains no model calls, no API keys, no vendor.
 - **Channel:** Perfology Clips
 - **Video:** https://www.youtube.com/watch?v=AVvDFsMUxf0
 - **Scraped:** 2026-09-10
-- **Languages (priority):** en
+- **Transcript:** English (auto-generated)
 
 ---
 
@@ -57,14 +57,19 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 
 ```bash
 .venv/bin/python scrape.py https://www.youtube.com/watch?v=VIDEO_ID
-.venv/bin/python scrape.py VIDEO_ID                  # bare ID works too
-.venv/bin/python scrape.py VIDEO_ID --languages en de # caption preference (default: de en)
+.venv/bin/python scrape.py VIDEO_ID                   # bare ID works too
+.venv/bin/python scrape.py VIDEO_ID --languages en de # force a caption preference order
 .venv/bin/python scrape.py VIDEO_ID --overwrite       # replace an existing file
 .venv/bin/python scrape.py -- -abc123xyz9             # IDs starting with "-" need the --
 ```
 
 Prints the path it wrote. The summary section holds a `_(TODO)_` placeholder until something
 fills it in.
+
+**Captions are picked automatically:** whatever the video actually has, preferring a
+human-written track over the auto-generated one. A German talk gives you a German transcript, an
+English one gives you English — no language configuration to get wrong. `--languages` overrides
+that when you want a specific track, e.g. a translated one.
 
 ## Use it from your LLM (the good part)
 
@@ -104,7 +109,7 @@ In `claude_desktop_config.json`:
 
 | Tool | What it does |
 | --- | --- |
-| `get_transcript` | Title, channel, URL, transcript. Read-only. |
+| `get_transcript` | Title, channel, URL, transcript and which caption track it came from. Read-only. |
 | `scrape_video` | Writes the output file. Won't overwrite unless `overwrite=true`. |
 | `save_summary` | Fills the placeholder. Refuses to write outside `output/`. |
 | `list_outputs` | Every output file, and whether its summary is still pending. |
@@ -117,6 +122,7 @@ model can't write files across your disk.
 - **Captions, not audio.** Uses
   [`youtube-transcript-api`](https://github.com/jdepoix/youtube-transcript-api) — videos without
   captions fail, and YouTube rate-limits datacenter IPs, so this is happiest on a home connection.
+  The header of each file records which track was used.
 - **Auto-captions arrive unpunctuated,** so paragraph splitting is best-effort on those.
 - **Titles** come from YouTube's public oEmbed endpoint — still no key required.
 - **`output/` is gitignored.** Scraped content stays local. Mind the copyright of anything you

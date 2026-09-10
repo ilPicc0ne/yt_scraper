@@ -25,6 +25,9 @@ class Transcript(TypedDict):
     title: str
     channel: str
     url: str
+    language: str
+    language_code: str
+    is_generated: bool
     transcript: str
 
 
@@ -38,15 +41,16 @@ def _guard(fn, *a, **kw):
 
 @mcp.tool(title="Get YouTube transcript",
           annotations=ToolAnnotations(read_only_hint=True, open_world_hint=True))
-def get_transcript(video: str, languages: list[str] = scrape.DEFAULT_LANGS) -> Transcript:
+def get_transcript(video: str, languages: list[str] | None = None) -> Transcript:
     """Fetch title, channel, URL and the plain-text transcript of a YouTube video.
-    `video` may be a video ID or any youtube.com / youtu.be URL. `languages` is the
-    caption-language preference order (default de, en)."""
+    `video` may be a video ID or any youtube.com / youtu.be URL. Leave `languages`
+    unset to use the video's own captions (a human-written track if one exists,
+    otherwise the auto-generated one); pass a list to force a preference order."""
     return _guard(scrape.get_transcript, video, languages)
 
 
 @mcp.tool(title="Scrape video into output file")
-def scrape_video(video: str, languages: list[str] = scrape.DEFAULT_LANGS,
+def scrape_video(video: str, languages: list[str] | None = None,
                  overwrite: bool = False) -> str:
     """Fetch the transcript and write output/<YYYY-MM-DD>_<title>.md containing
     metadata, a `_(TODO)_` summary placeholder and the full transcript.

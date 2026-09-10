@@ -4,5 +4,6 @@ __pycache__/
 .DS_Store
 
 # Scraped transcripts and summaries are local artifacts, not repo content.
-output/*
-!output/.gitkeep
+# scrape.py creates output/ on demand, so the folder need not be in the repo.
+output/
+.claude/
